@@ -7,6 +7,7 @@
 * 添加 DEGUG 级别，五种日志等级 DEBUG < INFO < WARING < ERROR < FATAL
 * 增加 SetOL方法，通过 SetOL 设置 stderrThreshold 值，级别大于等于 stderrThreshold 则会在控制台输出信息，默认级别 ERROR
 * 优化日志输出名字，把“级别”标签放在靠前的位置
+* **其他操作与 [glog](https://github.com/golang/glog) 完全一样**
 
 ### demo
 ```
