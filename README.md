@@ -14,29 +14,31 @@
 package main
 
 import (
-	"coding.net/haozibi/gglog"
-	"flag"
+    "github.com/haozibi/gglog"
+    "flag"
 )
 
 func main() {
-	flag.Parse()
-	defer gglog.Flush()
+    flag.Parse()
+    defer gglog.Flush()
 
-	// 设置控制台输出级别，比此级别大的都会在控制台输出
-	// DEBUG < INFO < WARING < ERROR < FATAL , 默认ERROR级别
-	gglog.SetOL("DEBUG")
+    // 设置控制台输出级别，比此级别大的都会在控制台输出
+    // DEBUG < INFO < WARING < ERROR < FATAL , 默认ERROR级别
+    gglog.SetOL("DEBUG")
+    // 设置log输出路径
+    gglog.SetLogDir("log")
 
-	gglog.Info("Hello gglog")
-	gglog.Debug("This is a Debug log")
-	gglog.Warning("This is a Warning log")
-	gglog.Error("This is a Error log")
+    gglog.Info("Hello gglog")
+    gglog.Debug("This is a Debug log")
+    gglog.Warning("This is a Warning log")
+    gglog.Error("This is a Error log")
 
-	gglog.Infof("info %d", 1)
-	gglog.Warningf("warning %d", 2)
-	gglog.Errorf("error %d", 3)
+    gglog.Infof("info %d", 1)
+    gglog.Warningf("warning %d", 2)
+    gglog.Errorf("error %d", 3)
 
-	gglog.V(1).Infoln("level 1")
-	gglog.V(2).Infoln("level 2")
+    gglog.V(1).Infoln("level 1")
+    gglog.V(2).Infoln("level 2")
 }
 ```
 
