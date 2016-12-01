@@ -106,6 +106,8 @@ const (
 	numSeverity = 5
 )
 
+var OutPut = true
+
 const severityChar = "DIWEF"
 
 var severityName = []string{
@@ -114,24 +116,6 @@ var severityName = []string{
 	warningLog: "WARNING",
 	errorLog:   "ERROR",
 	fatalLog:   "FATAL",
-}
-
-//设置stderrThreshold值，只有大于等于 stderrThreshold 的级别才能正确输出，706行附近
-// setOL => set output level
-func SetOL(value string) error {
-	var threshold severity
-	// Is it a known name?
-	if v, ok := severityByName(value); ok {
-		threshold = v
-	} else {
-		v, err := strconv.Atoi(value)
-		if err != nil {
-			return err
-		}
-		threshold = severity(v)
-	}
-	logging.stderrThreshold.set(threshold)
-	return nil
 }
 
 // get returns the value of the severity.
@@ -578,33 +562,55 @@ func (l *loggingT) formatHeader(s severity, file string, line int) *buffer {
 		s = debugLog // for safety.
 	}
 	buf := l.getBuffer()
-
-	// Avoid Fprintf, for speed. The format is so simple that we can do it quickly by hand.
-	// It's worth about 3X. Fprintf is hard.
-	_, month, day := now.Date()
-	hour, minute, second := now.Clock()
-	// Lmmdd hh:mm:ss.uuuuuu threadid file:line]
-	buf.tmp[0] = severityChar[s]
-	buf.twoDigits(1, int(month))
-	buf.twoDigits(3, day)
-	buf.tmp[5] = ' '
-	buf.twoDigits(6, hour)
-	buf.tmp[8] = ':'
-	buf.twoDigits(9, minute)
-	buf.tmp[11] = ':'
-	buf.twoDigits(12, second)
-	buf.tmp[14] = '.'
-	buf.nDigits(6, 15, now.Nanosecond()/1000, '0')
-	buf.tmp[21] = ' '
-	buf.nDigits(7, 22, pid, ' ') // TODO: should be TID
-	buf.tmp[29] = ' '
-	buf.Write(buf.tmp[:30])
-	buf.WriteString(file)
-	buf.tmp[0] = ':'
-	n := buf.someDigits(1, line)
-	buf.tmp[n+1] = ']'
-	buf.tmp[n+2] = ' '
-	buf.Write(buf.tmp[:n+3])
+	if IsSimple == false {
+		// Avoid Fprintf, for speed. The format is so simple that we can do it quickly by hand.
+		// It's worth about 3X. Fprintf is hard.
+		_, month, day := now.Date()
+		hour, minute, second := now.Clock()
+		// Lmmdd hh:mm:ss.uuuuuu threadid file:line]
+		buf.tmp[0] = severityChar[s]
+		buf.twoDigits(1, int(month))
+		buf.twoDigits(3, day)
+		buf.tmp[5] = ' '
+		buf.twoDigits(6, hour)
+		buf.tmp[8] = ':'
+		buf.twoDigits(9, minute)
+		buf.tmp[11] = ':'
+		buf.twoDigits(12, second)
+		buf.tmp[14] = '.'
+		buf.nDigits(6, 15, now.Nanosecond()/1000, '0')
+		buf.tmp[21] = ' '
+		buf.nDigits(7, 22, pid, ' ') // TODO: should be TID
+		buf.tmp[29] = ' '
+		buf.Write(buf.tmp[:30])
+		buf.WriteString(file)
+		buf.tmp[0] = ':'
+		n := buf.someDigits(1, line)
+		buf.tmp[n+1] = ']'
+		buf.tmp[n+2] = ' '
+		buf.Write(buf.tmp[:n+3])
+	} else {
+		// Avoid Fprintf, for speed. The format is so simple that we can do it quickly by hand.
+		// It's worth about 3X. Fprintf is hard.
+		hour, minute, second := now.Clock()
+		// Lmmdd hh:mm:ss.uuuuuu threadid file:line]
+		buf.tmp[0] = severityChar[s]
+		buf.twoDigits(1, hour)
+		buf.tmp[3] = ':'
+		buf.twoDigits(4, minute)
+		buf.tmp[6] = ':'
+		buf.twoDigits(7, second)
+		buf.tmp[9] = '.'
+		buf.nDigits(4, 10, now.Nanosecond()/100000, '0')
+		buf.tmp[14] = ' '
+		buf.Write(buf.tmp[:15])
+		buf.WriteString(file)
+		buf.tmp[0] = ':'
+		n := buf.someDigits(1, line)
+		buf.tmp[n+1] = ']'
+		buf.tmp[n+2] = ' '
+		buf.Write(buf.tmp[:n+3])
+	}
 	return buf
 }
 
