@@ -1,6 +1,6 @@
 ## gglog
 
-[![Build Status](https://travis-ci.org/haozibi/gglog.svg?branch=master)](https://travis-ci.org/haozibi/gglog)
+[![Build Status](https://travis-ci.org/haozibi/gglog.svg?branch=master)](https://travis-ci.org/haozibi/gglog) ![](https://img.shields.io/badge/language-go-red.svg)
 
 基于 **[glog](https://github.com/golang/glog)** 进行改进的轻量级日志系统。
 
