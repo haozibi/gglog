@@ -52,4 +52,4 @@ func main() {
 
 ### 截图
 
-![gglog](https://ooo.0o0.ooo/2016/12/01/583fca29a4557.png)
+![gglog](https://i.loli.net/2018/01/06/5a507999e0224.jpg)
