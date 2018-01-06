@@ -1,5 +1,7 @@
 ## gglog
 
+[![Build Status](https://travis-ci.org/haozibi/gglog.svg?branch=master)](https://travis-ci.org/haozibi/gglog)
+
 基于 **[glog](https://github.com/golang/glog)** 进行改进的轻量级日志系统。
 
 ### 改进内容
