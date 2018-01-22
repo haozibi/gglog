@@ -15,7 +15,7 @@
 * **其他操作与 [glog](https://github.com/golang/glog) 完全一样**
 
 ### 示例
-```
+```go
 package main
 
 import (
