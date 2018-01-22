@@ -562,11 +562,13 @@ func (l *loggingT) formatHeader(s severity, file string, line int) *buffer {
 		s = debugLog // for safety.
 	}
 	buf := l.getBuffer()
-	if IsSimple == false {
+	if outPutType == outTypeDefault {
 		// Avoid Fprintf, for speed. The format is so simple that we can do it quickly by hand.
 		// It's worth about 3X. Fprintf is hard.
 		_, month, day := now.Date()
 		hour, minute, second := now.Clock()
+		// set prefix
+		buf.WriteString(prefix)
 		// Lmmdd hh:mm:ss.uuuuuu threadid file:line]
 		buf.tmp[0] = severityChar[s]
 		buf.twoDigits(1, int(month))
@@ -589,10 +591,12 @@ func (l *loggingT) formatHeader(s severity, file string, line int) *buffer {
 		buf.tmp[n+1] = ']'
 		buf.tmp[n+2] = ' '
 		buf.Write(buf.tmp[:n+3])
-	} else {
+	} else if outPutType == outTypeNormal {
 		// Avoid Fprintf, for speed. The format is so simple that we can do it quickly by hand.
 		// It's worth about 3X. Fprintf is hard.
 		hour, minute, second := now.Clock()
+		// set prefix
+		buf.WriteString(prefix)
 		// Lmmdd hh:mm:ss.uuuuuu threadid file:line]
 		buf.tmp[0] = severityChar[s]
 		buf.twoDigits(1, hour)
@@ -610,6 +614,26 @@ func (l *loggingT) formatHeader(s severity, file string, line int) *buffer {
 		buf.tmp[n+1] = ']'
 		buf.tmp[n+2] = ' '
 		buf.Write(buf.tmp[:n+3])
+	} else if outPutType == outTypeSimple {
+		// Avoid Fprintf, for speed. The format is so simple that we can do it quickly by hand.
+		// It's worth about 3X. Fprintf is hard.
+		hour, minute, second := now.Clock()
+		// set prefix
+		buf.WriteString(prefix)
+		// Lmmdd hh:mm:ss.uuuuuu threadid file:line]
+		buf.tmp[0] = severityChar[s]
+		buf.twoDigits(1, hour)
+		buf.tmp[3] = ':'
+		buf.twoDigits(4, minute)
+		buf.tmp[6] = ':'
+		buf.twoDigits(7, second)
+		buf.Write(buf.tmp[:9])
+		// buf.WriteString(file)
+		// buf.tmp[0] = ':'
+		// n := buf.someDigits(1, line)
+		buf.tmp[0] = ']'
+		buf.tmp[1] = ' '
+		buf.Write(buf.tmp[:2])
 	}
 	return buf
 }

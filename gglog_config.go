@@ -5,14 +5,31 @@ package gglog
 
 import (
 	"strconv"
+	"strings"
 )
 
-// 日志输入变量，控制 console 输出是否精简，默认为否
-var IsSimple = false
+var (
+	prefix = ""
+	// 输出形式default(默认),normal,simple,(复杂程度依次减少)
+	outPutType     = outTypeDefault
+	outTypeDefault = 0
+	outTypeNormal  = 1
+	outTypeSimple  = 2
+)
 
-// 设置日志console 输出是否精简，默认为否
-func SetOutSimple(v bool) {
-	IsSimple = v
+var outPutTypes map[string]int = map[string]int{
+	"default": outTypeDefault,
+	"normal":  outTypeNormal,
+	"simple":  outTypeSimple,
+}
+
+// 设置日志console 输出格式，DEFAULT,NORMAL,SIMPLE
+func SetOutType(t string) {
+	tmp := strings.ToLower(t)
+	if _, ok := outPutTypes[tmp]; !ok {
+		panic("Set Out type Error")
+	}
+	outPutType = outPutTypes[tmp]
 }
 
 //设置stderrThreshold值，只有大于等于 stderrThreshold 的级别才能正确输出，706行附近
@@ -37,4 +54,8 @@ func SetOutLevel(value string) error {
 // 设置日志输出目录，
 func SetLogDir(dir string) {
 	logDirs = append(logDirs, dir)
+}
+
+func SetPrefix(p string) {
+	prefix = p
 }
